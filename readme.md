@@ -34,7 +34,12 @@ The application is now running and listening to port 3000 or to the port you spe
       ```
       {
           language: "en",
-          html: ["value1", "value2", "value3", ...]
+          html: {
+            "key1": "value1",
+            "key2": "value2",
+            "key3": "value3",
+            ...
+          }
       }
       ```
       `html`-attribute:
@@ -45,20 +50,34 @@ The application is now running and listening to port 3000 or to the port you spe
       **Output structure:**
       ```
       {
-          success: value,
           timeMS: value,
+          errodCode: value,
           errorMsg: value,
-          html: ["value1", "value2", "value3", ...]
+          html: {
+            "key1": { content: "...", errorMsg: null },
+            "key2": { content: "...", errorMsg: null },
+            "key3": { content: null, errorMsg: "..." },
+            ...
+          }
       }
       ```
-      `success`-attribute:    
-      Value will be 1 (true) or 0 (false), depending on the status.    
       `timeMS`-attribute:    
-      Value will contain information about the serverside processing time.    
-      `errorMsg`-attribute (appended if success = 0):    
-      the value will contain an error message.    
-      `html`-attribute (appended if success = 1):    
-      the value will contain *HTML* strings packed into an array. Each value must be unescaped, e.g with decodeURI().    
+      the value will contain information about the serverside processing time.    
+      `errorMsg`-attribute:    
+      the attribute will contain an error message, describing an error which occured during processing the whole package.    
+      the attribute will be null if no error occured.    
+      `errorCode`-attribute:    
+      the attribute will contain an error code, describing an error which occured during processing the whole package.    
+      the attribute will be null if no error occured.    
+      `html`-attribute (null if an error occured, while processing the whole package):    
+      If no error occured during processing and validating the whole package this attribute will contain a list of objects.    
+      Each object represents a failed or successfull rendering of the refering *HTML*-input string.    
+      Each object's key equals the key of the related *HTML*-input string.
+      Each object contains a content-attribute and an errorMsg-Attribute.    
+      If no error occured during rendering the related input string, the output-object's content-attribute will contain a *HTML*-string while the errorMsg-Attribute will contain a null-value.    
+      If an error occured during rendering the related input string, the output-object's content-value will be set to null while the errorMsg will contain a string, describing the error.    
+      If no error occured the rendered strings can be accessed with output.html.key.content....
+      In this case the content string must be unescaped, e.g with decodeURI().    
 
 
 ## cURL Commands
@@ -82,7 +101,7 @@ curl -X POST \
   -H 'API-Key: apikey' \
   -H 'Content-Type: application/json' \
   -H 'cache-control: no-cache' \
-  -d '{"language":"en", "html":["value1","value2","value3"]}'
+  -d '{"language":"en", "html":{"key1":"value1","key2":"value2","key3":"value3"}}'
 ```
 
 

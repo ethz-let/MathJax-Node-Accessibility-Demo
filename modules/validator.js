@@ -7,8 +7,9 @@ module.exports = {
 
             if ( !req.body ) {
                 res.status( 400 ).send( {
-                    success: 0,
+                    html: null,
                     timeMS: TIMER.end( req.body.starttime ),
+                    errorCode: 2,
                     errorMsg: 'request has no body'
                 } );
                 return;
@@ -16,8 +17,9 @@ module.exports = {
 
             if ( !req.body.language ) {
                 res.status( 400 ).send( {
-                    success: 0,
+                    html: null,
                     timeMS: TIMER.end( req.body.starttime ),
+                    errorCode: 2,
                     errorMsg: 'request has no language attribute and/or value in body'
                 } );
                 return;
@@ -25,8 +27,9 @@ module.exports = {
 
             if ( ![ 'de', 'en' ].includes( req.body.language ) ) {
                 res.status( 400 ).send( {
-                    success: 0,
+                    html: null,
                     timeMS: TIMER.end( req.body.starttime ),
+                    errorCode: 2,
                     errorMsg: 'selected language is not valid'
                 } );
                 return;
@@ -34,8 +37,9 @@ module.exports = {
 
             if ( !req.body.html ) {
                 res.status( 400 ).send( {
-                    success: 0,
+                    html: null,
                     timeMS: TIMER.end( req.body.starttime ),
+                    errorCode: 2,
                     errorMsg: 'request has no html attribute and/or value in body'
                 } );
                 return;
@@ -43,8 +47,9 @@ module.exports = {
 
             if ( req.body.html.length == 0 ) {
                 res.status( 400 ).send( {
-                    success: 0,
+                    html: null,
                     timeMS: TIMER.end( req.body.starttime ),
+                    errorCode: 2,
                     errorMsg: 'request html value is empty'
                 } );
                 return;
@@ -57,8 +62,9 @@ module.exports = {
 
             console.log( error );
             res.status( 500 ).send( {
-                success: 0,
+                html: null,
                 timeMS: TIMER.end( req.body.starttime ),
+                errorCode: 2,
                 errorMsg: 'an error occured during validation'
             } );
             return;

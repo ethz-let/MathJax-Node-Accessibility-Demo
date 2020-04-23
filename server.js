@@ -33,8 +33,9 @@ process.on( 'uncaughtException', ( error ) => {
 APP.use( ( error, req, res, next ) => {
     if ( error instanceof SyntaxError ) {
         res.status( 400 ).send( {
-            success: 0,
-            content: 'Request includes invalid JSON syntax'
+            html: null,
+            errorCode: 2,
+            errorMsg: 'Request includes invalid JSON syntax'
         } );
         return;
     } else {
@@ -44,12 +45,13 @@ APP.use( ( error, req, res, next ) => {
 
 APP.get( '/', TIMER.start, ( req, res ) => {
     res.status( 200 ).send( {
-        success: 1,
         timeMS: TIMER.end( req.body.starttime ),
         routes: [
             '/process',
             '/hello'
-        ]
+        ],
+        errorCode: null,
+        errorMsg: null
     } );
     return;
 } );
@@ -61,8 +63,9 @@ APP.get( '/hello', ( _req, res ) => {
 
 APP.get( '*', TIMER.start, ( req, res ) => {
     res.status( 404 ).send( {
-        success: 0,
+        html: null,
         timeMS: TIMER.end( req.body.starttime ),
+        errorCode: 2,
         errorMsg: 'no such route'
     } );
     return;
@@ -75,8 +78,9 @@ APP.post( '/process', TIMER.start, ACCESSOR.verifyApiKey, VALIDATOR.validate, ( 
 
 APP.post( '*', TIMER.start, ( req, res ) => {
     res.status( 404 ).send( {
-        success: 0,
+        html: null,
         timeMS: TIMER.end( req.body.starttime ),
+        errorCode: 2,
         errorMsg: 'no such route'
     } );
     return;
