@@ -39,6 +39,7 @@ module.exports = {
                 errorMsg: null
             } );
             return;
+
         }).catch( (error) => {
             res.status( 500 ).send( {
                 html: null,

@@ -42,7 +42,7 @@ module.exports = {
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),
-                errorCode: 2,
+                errorCode: 1,
                 errorMsg: 'an error occured in verifyToken()'
             } );
             return;
