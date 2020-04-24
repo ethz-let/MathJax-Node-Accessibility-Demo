@@ -5,54 +5,41 @@ const SRE       = require( 'speech-rule-engine' );
 
 module.exports = {
 
+    promisesAll: async ( hash ) => {
+        const promises = Object.keys( hash ).map( async key => ( { [ key ]: await hash[ key ] } ) );
+        const resolved = await Promise.all( promises );
+        return resolved.reduce( ( hash, part ) => ( { ...hash, ...part } ), {} );
+    },
+
     processRequest: async( req, res ) => {
-        try {
-            var promises = [];
 
-            for ( var key in req.body.html ) {
-                req.body.html[ key ] = req.body.html[ key ]
-                    .replace( "\\(", "$" )
-                    .replace( "\\)", "$" )
-                    .replace( "\\[", "$$$$" )
-                    .replace( "\\]", "$$$$" );
+        var promises = {};
 
-                promises.push( module.exports.mjpageconversion( req.body.html[ key ], req.body.language, key ) );
+        for ( var key in req.body.html ) {
+            req.body.html[ key ] = req.body.html[ key ]
+                .replace( "\\(", "$" )
+                .replace( "\\)", "$" )
+                .replace( "\\[", "$$$$" )
+                .replace( "\\]", "$$$$" );
+            promises[ key ] = module.exports.mjpageconversion( req.body.html[ key ], req.body.language );
+        }
+
+        module.exports.promisesAll(promises).then( (result) => {
+
+            var output = {};
+
+            for ( var i in result ) {
+                output[ i ] = { content: result[i].content || null, errorMsg: result[i].error || null };
             }
 
-            Promise.all(promises).then( ( result ) => {
-
-                var output = req.body.html;
-
-                for ( var key in output ) {
-                    output[key] = { content: null, errorMsg: null };
-                }
-
-                for ( var i in result ) {
-                    output[ result[i].key ] = { content: result[i].content || null, errorMsg: result[i].error || null };
-                }
-
-                res.status( 201 ).send( {
-                    html: output,
-                    timeMS: TIMER.end( req.body.starttime ),
-                    errorCode: null,
-                    errorMsg: null
-                } );
-
-                return;
-            })
-            .catch( ( error ) => {
-                res.status( 500 ).send( {
-                    html: null,
-                    timeMS: TIMER.end( req.body.starttime ),
-                    errorCode: 1,
-                    errorMsg: 'an error occured in mjpageconversion()'
-                } );
-
-                return;
-            } ) ;
-
-        } catch ( error ) {
-            console.log( error );
+            res.status( 201 ).send( {
+                html: output,
+                timeMS: TIMER.end( req.body.starttime ),
+                errorCode: null,
+                errorMsg: null
+            } );
+            return;
+        }).catch( (error) => {
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),
@@ -60,10 +47,10 @@ module.exports = {
                 errorMsg: 'an error occured in processRequest()'
             } );
             return;
-        }
+        });
     },
 
-    mjpageconversion: async( html, language, key ) => {
+    mjpageconversion: async( html, language ) => {
 
         return new Promise( ( resolve, reject ) => {
 
@@ -83,28 +70,23 @@ module.exports = {
                 svg: true
             },
             ( result ) => {
-                resolve( {
-                    key: key,
-                    content: result,
-                    error: null
-                } );
+                resolve( { content: result } );
             } )
-            .on( 'afterConversion', function( parsedFormula ) {
-
+            .on( 'afterConversion', ( parsedFormula ) => {
                 try {
-                    if (language == 'en') {
-                        SRE.setupEngine( { locale: 'en', domain: 'mathspeak' } );
-                    } else {
+                    if (language == 'de') {
                         SRE.setupEngine( { locale: 'de', domain: 'mathspeak' } );
+                    } else {
+                        SRE.setupEngine( { locale: 'en', domain: 'mathspeak' } );
                     }
 
-                    parsedFormula.node.innerHTML = '<p aria-hidden="false" class="sr-only pLatexText"> ' +
-                                                    SRE.toSpeech( parsedFormula.outputFormula.mml ) +
-                                                    '</p>' +
-                                                    parsedFormula.outputFormula.svg +
-                                                    '<span class="mathMLFormula" aria-hidden="true">' +
-                                                    parsedFormula.outputFormula.mml +
-                                                    '</span>';
+                    var speaktext = SRE.toSpeech( parsedFormula.outputFormula.mml );
+                    if ( speaktext ) {
+                        parsedFormula.node.innerHTML = 
+                        '<p aria-hidden="false" class="sr-only pLatexText">' + speaktext + '</p>' +
+                        parsedFormula.outputFormula.svg +
+                        '<span class="mathMLFormula" aria-hidden="true">' +  parsedFormula.outputFormula.mml + '</span>';
+                    }
 
                     var title = parsedFormula.node.getElementsByTagName( "title" )[ 0 ];
                     if ( title ) {
@@ -119,16 +101,12 @@ module.exports = {
                         svg.style.maxWidth = "100%";
                     }
                 } catch ( error ) {
-                    reject( 'SVG rendered but an error occured during "afterConversion"' )
+                    reject( 'an error occured in afterConversion()' );
                 }
             } );
         } )
         .catch( ( error ) => {
-            return {
-                key: key,
-                content: null,
-                error: error
-            };
+            return { error: error };
         } );
     }
 }
