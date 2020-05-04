@@ -9,11 +9,12 @@ const ACCESSOR      = require( './modules/accessor' );
 const PROCESSOR     = require( './modules/processor' );
 const VALIDATOR     = require( './modules/validator' );
 
+const mstimeout     = 15000;
 // =============================================================
 // Middleware layers.
 // =============================================================
 
-APP.use( TIMEOUT( 120000 ) );
+APP.use( TIMEOUT( mstimeout ) );
 
 APP.use( HELMET() );
 
@@ -58,7 +59,7 @@ APP.listen( process.env.PORT || 3000, () => {
 
 APP.get( '/', TIMER.start, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( 120000 );
+    req.setTimeout( mstimeout );
     res.status( 200 ).send( {
         timeMS: TIMER.end( req.body.starttime ),
         routes: [
@@ -73,14 +74,14 @@ APP.get( '/', TIMER.start, ( req, res ) => {
 
 APP.get( '/hello', ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( 120000 );
+    req.setTimeout( mstimeout );
     res.status( 200 ).send( 'hello' );
     return;
 } );
 
 APP.get( '*', TIMER.start, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( 120000 );
+    req.setTimeout( mstimeout );
     res.status( 404 ).send( {
         html: null,
         timeMS: TIMER.end( req.body.starttime ),
@@ -92,14 +93,14 @@ APP.get( '*', TIMER.start, ( req, res ) => {
 
 APP.post( '/process', TIMER.start, ACCESSOR.verifyApiKey, VALIDATOR.validate, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( 120000 );
+    req.setTimeout( mstimeout );
     PROCESSOR.processRequest( req, res );
     return;
 } );
 
 APP.post( '*', TIMER.start, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( 120000 );
+    req.setTimeout( mstimeout );
     res.status( 404 ).send( {
         html: null,
         timeMS: TIMER.end( req.body.starttime ),
