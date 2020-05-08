@@ -24,12 +24,12 @@ module.exports = {
             promises[ key ] = module.exports.mjpageconversion( req.body.html[ key ], req.body.language );
         }
 
-        module.exports.promisesAll(promises).then( (result) => {
+        module.exports.promisesAll(promises).then( ( result ) => {
 
             var output = {};
 
             for ( var i in result ) {
-                output[ i ] = { content: result[i].content || null, errorMsg: result[i].error || null };
+                output[ i ] = { content: result[ i ].content || null, errorMsg: result[ i ].error || null };
             }
 
             res.status( 201 ).send( {
@@ -40,7 +40,7 @@ module.exports = {
             } );
             return;
 
-        }).catch( (error) => {
+        }).catch( ( error ) => {
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),
