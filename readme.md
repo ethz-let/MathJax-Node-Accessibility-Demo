@@ -56,7 +56,7 @@ The application is now running and listening to port 3000 or to the port you spe
           html: {
             "key1": { content: "...", errorMsg: null },
             "key2": { content: "...", errorMsg: null },
-            "key3": { content: null, errorMsg: "..." },
+            "key3": { content: null, errorMsg: [...] },
             ...
           }
       }
@@ -75,7 +75,7 @@ The application is now running and listening to port 3000 or to the port you spe
       Each object's key equals the key of the related *HTML*-input string.
       Each object contains a content-attribute and an errorMsg-Attribute.    
       If no error occured during rendering the related input string, the output-object's content-attribute will contain a *HTML*-string while the errorMsg-Attribute will contain a null-value.    
-      If an error occured during rendering the related input string, the output-object's content-value will be set to null while the errorMsg will contain a string, describing the error.    
+      If an error occured during rendering the related input string, the output-object's content-value will be set to null while the errorMsg will contain an array of strings, describing the error(s).    
       If no error occured the rendered strings can be accessed with output.html.key.content....
       In this case the content string must be unescaped, e.g with decodeURI().    
 

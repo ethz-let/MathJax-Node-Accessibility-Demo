@@ -102,7 +102,7 @@ module.exports = {
                         svg.style.maxWidth = "100%";
                     }
                 } catch ( error ) {
-                    reject( 'an error occured in afterConversion()' );
+                    reject( ['an error occured in afterConversion()'] );
                 }
             } );
         } )
