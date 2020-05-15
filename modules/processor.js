@@ -78,7 +78,6 @@ module.exports = {
                 speakText: false,
                 extensions: 'TeX/mhchem.js, TeX/AMSmath.js, TeX/AMSsymbols.js',
                 errorHandler: ( id, wrapperNode, sourceFormula, sourceFormat, errors ) => {
-                    LOGGER.logfile.log( { level: 'error', message: errors } );
                     reject( errors );
                 }
             }, {
@@ -117,12 +116,13 @@ module.exports = {
                         svg.style.maxWidth = "100%";
                     }
                 } catch ( error ) {
-                    LOGGER.logfile.log( { level: 'error', message: error } );
-                    reject( ['an error occured in afterConversion()'] );
+                    reject( [ 'an error occured in afterConversion()' ] );
                 }
             } );
         } )
         .catch( ( error ) => {
+            LOGGER.logfile.log( { level: 'error', message: error } );
+            error = error instanceof Error ? [ 'an error occured in mjpageconversion()' ] : error;
             return { error: error };
         } );
     }
