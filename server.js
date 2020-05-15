@@ -4,12 +4,14 @@ const HELMET        = require( 'helmet' );
 const BODYPARSER    = require( 'body-parser' );
 const TIMEOUT       = require( 'connect-timeout' );
 
+const LOGGER        = require( './modules/logger' );
 const TIMER         = require( './modules/timer' );
 const ACCESSOR      = require( './modules/accessor' );
 const PROCESSOR     = require( './modules/processor' );
 const VALIDATOR     = require( './modules/validator' );
 
 const mstimeout     = 15000;
+
 // =============================================================
 // Middleware layers.
 // =============================================================
@@ -26,21 +28,8 @@ APP.use( BODYPARSER.urlencoded( {
     parameterLimit: 50000
 } ) );
 
-APP.use( ( error, req, res, next ) => {
-    if ( error instanceof SyntaxError ) {
-        res.status( 400 ).send( {
-            html: null,
-            errorCode: 2,
-            errorMsg: 'Request includes invalid JSON syntax'
-        } );
-        return;
-    } else {
-        next();
-    }
-} );
-
 process.on( 'uncaughtException', ( error ) => {
-    console.log( error )
+    LOGGER.logfile.log( { level: 'error', message: error } );
 } );
 
 // =============================================================
@@ -48,9 +37,8 @@ process.on( 'uncaughtException', ( error ) => {
 // =============================================================
 
 APP.listen( process.env.PORT || 3000, () => {
-    console.log( '===============' );
     console.log( 'Service started' );
-    console.log( '===============' );
+    LOGGER.logfile.log( { level: 'info', message: 'Service started' } );
 } );
 
 // =============================================================
@@ -108,4 +96,30 @@ APP.post( '*', TIMER.start, ( req, res ) => {
         errorMsg: 'no such route'
     } );
     return;
+} );
+
+// =============================================================
+// Catch errors.
+// =============================================================
+
+APP.use( ( error, req, res, next ) => {
+
+    if ( error instanceof SyntaxError ) {
+        LOGGER.logfile.log( { level: 'error', message: error } );
+        res.status( 400 ).send( {
+            html: null,
+            errorCode: 2,
+            errorMsg: 'Request includes invalid JSON syntax'
+        } );
+        return;
+    } else if ( error ) {
+        LOGGER.logfile.log( { level: 'error', message: error } );
+        res.status( 500 ).send( {
+            html: null,
+            errorCode: 2,
+            errorMsg: 'Unhandled exception'
+        } );
+    } else {
+        next();
+    }
 } );

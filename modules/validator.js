@@ -1,10 +1,10 @@
 const TIMER = require( './timer' );
+const LOGGER = require( './logger' );
 
 module.exports = {
 
     validate: async( req, res, next ) => {
         try {
-
             if ( !req.body ) {
                 res.status( 400 ).send( {
                     html: null,
@@ -59,8 +59,7 @@ module.exports = {
             return;
 
         } catch ( error ) {
-
-            console.log( error );
+            LOGGER.logfile.log( { level: 'error', message: error } );
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),

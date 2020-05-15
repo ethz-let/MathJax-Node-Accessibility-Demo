@@ -1,4 +1,5 @@
 const TIMER     = require( './timer' );
+const LOGGER    = require( './logger' );
 const MJPAGE    = require( 'mathjax-node-page' ).mjpage;
 const SRE       = require( 'speech-rule-engine' );
       SRE.setupEngine( { locale: 'en', domain: 'mathspeak' } );
@@ -8,20 +9,32 @@ module.exports = {
     promisesAll: async ( hash ) => {
         const promises = Object.keys( hash ).map( async key => ( { [ key ]: await hash[ key ] } ) );
         const resolved = await Promise.all( promises );
+
         return resolved.reduce( ( hash, part ) => ( { ...hash, ...part } ), {} );
     },
 
     processRequest: async( req, res ) => {
 
-        var promises = {};
+        try {
+            var promises = {};
 
-        for ( var key in req.body.html ) {
-            req.body.html[ key ] = req.body.html[ key ]
-                .replace( "\\(", "$" )
-                .replace( "\\)", "$" )
-                .replace( "\\[", "$$$$" )
-                .replace( "\\]", "$$$$" );
-            promises[ key ] = module.exports.mjpageconversion( req.body.html[ key ], req.body.language );
+            for ( var key in req.body.html ) {
+                req.body.html[ key ] = req.body.html[ key ]
+                    .replace( "\\(", "$" )
+                    .replace( "\\)", "$" )
+                    .replace( "\\[", "$$$$" )
+                    .replace( "\\]", "$$$$" );
+                promises[ key ] = module.exports.mjpageconversion( req.body.html[ key ], req.body.language );
+            }
+        } catch ( error ) {
+            LOGGER.logfile.log( { level: 'error', message: error } );
+            res.status( 500 ).send( {
+                html: null,
+                timeMS: TIMER.end( req.body.starttime ),
+                errorCode: 1,
+                errorMsg: 'an error occured in processRequest()'
+            } );
+            return;
         }
 
         module.exports.promisesAll(promises).then( ( result ) => {
@@ -40,7 +53,8 @@ module.exports = {
             } );
             return;
 
-        }).catch( ( error ) => {
+        } ).catch( ( error ) => {
+            LOGGER.logfile.log( { level: 'error', message: error } );
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),
@@ -64,6 +78,7 @@ module.exports = {
                 speakText: false,
                 extensions: 'TeX/mhchem.js, TeX/AMSmath.js, TeX/AMSsymbols.js',
                 errorHandler: ( id, wrapperNode, sourceFormula, sourceFormat, errors ) => {
+                    LOGGER.logfile.log( { level: 'error', message: errors } );
                     reject( errors );
                 }
             }, {
@@ -102,6 +117,7 @@ module.exports = {
                         svg.style.maxWidth = "100%";
                     }
                 } catch ( error ) {
+                    LOGGER.logfile.log( { level: 'error', message: error } );
                     reject( ['an error occured in afterConversion()'] );
                 }
             } );

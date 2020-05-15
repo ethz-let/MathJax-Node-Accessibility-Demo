@@ -1,4 +1,5 @@
 const TIMER = require( './timer' );
+const LOGGER = require( './logger' );
 
 module.exports = {
 
@@ -38,7 +39,7 @@ module.exports = {
                 return;
             }
         } catch ( error ) {
-            console.log( error )
+            LOGGER.logfile.log( { level: 'error', message: error } );
             res.status( 500 ).send( {
                 html: null,
                 timeMS: TIMER.end( req.body.starttime ),
