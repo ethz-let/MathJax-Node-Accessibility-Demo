@@ -28,6 +28,22 @@ APP.use( BODYPARSER.urlencoded( {
     parameterLimit: 50000
 } ) );
 
+APP.use( ( error, req, res, next ) => {
+
+    if ( error instanceof SyntaxError ) {
+
+        LOGGER.logfile.log( { level: 'error', message: error } );
+        res.status( 400 ).send( {
+            html: null,
+            errorCode: 2,
+            errorMsg: 'Request includes invalid JSON syntax'
+        } );
+        return;
+    } else {
+        next();
+    }
+} );
+
 process.on( 'uncaughtException', ( error ) => {
     LOGGER.logfile.log( { level: 'error', message: error } );
 } );
@@ -44,21 +60,6 @@ APP.listen( process.env.PORT || 3000, () => {
 // =============================================================
 // Routes.
 // =============================================================
-
-APP.get( '/', TIMER.start, ( req, res ) => {
-    req.clearTimeout();
-    req.setTimeout( mstimeout );
-    res.status( 200 ).send( {
-        timeMS: TIMER.end( req.body.starttime ),
-        routes: [
-            '/process',
-            '/hello'
-        ],
-        errorCode: null,
-        errorMsg: null
-    } );
-    return;
-} );
 
 APP.get( '/hello', ( req, res ) => {
     req.clearTimeout();
@@ -96,30 +97,4 @@ APP.post( '*', TIMER.start, ( req, res ) => {
         errorMsg: 'no such route'
     } );
     return;
-} );
-
-// =============================================================
-// Catch errors.
-// =============================================================
-
-APP.use( ( error, req, res, next ) => {
-
-    if ( error instanceof SyntaxError ) {
-        LOGGER.logfile.log( { level: 'error', message: error } );
-        res.status( 400 ).send( {
-            html: null,
-            errorCode: 2,
-            errorMsg: 'Request includes invalid JSON syntax'
-        } );
-        return;
-    } else if ( error ) {
-        LOGGER.logfile.log( { level: 'error', message: error } );
-        res.status( 500 ).send( {
-            html: null,
-            errorCode: 2,
-            errorMsg: 'Unhandled exception'
-        } );
-    } else {
-        next();
-    }
 } );

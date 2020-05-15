@@ -37,7 +37,7 @@ module.exports = {
             return;
         }
 
-        module.exports.promisesAll(promises).then( ( result ) => {
+        module.exports.promisesAll( promises ).then( ( result ) => {
 
             var output = {};
 
@@ -121,8 +121,12 @@ module.exports = {
             } );
         } )
         .catch( ( error ) => {
-            LOGGER.logfile.log( { level: 'error', message: error } );
-            error = error instanceof Error ? [ 'an error occured in mjpageconversion()' ] : error;
+
+            if (error instanceof Error) {
+                LOGGER.logfile.log( { level: 'error', message: error } );
+                error = [ 'an error occured in mjpageconversion()' ];
+            }
+
             return { error: error };
         } );
     }
