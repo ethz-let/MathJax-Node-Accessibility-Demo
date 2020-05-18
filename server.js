@@ -9,14 +9,13 @@ const TIMER         = require( './modules/timer' );
 const ACCESSOR      = require( './modules/accessor' );
 const PROCESSOR     = require( './modules/processor' );
 const VALIDATOR     = require( './modules/validator' );
-
-const mstimeout     = 15000;
+const CONFIG        = require( './modules/config' );
 
 // =============================================================
 // Middleware layers.
 // =============================================================
 
-APP.use( TIMEOUT( mstimeout ) );
+APP.use( TIMEOUT( CONFIG.mstimeout || 15000 ) );
 
 APP.use( HELMET() );
 
@@ -52,8 +51,10 @@ process.on( 'uncaughtException', ( error ) => {
 // App listening to port.
 // =============================================================
 
-APP.listen( process.env.PORT || 3000, () => {
+APP.listen( CONFIG.serverport || process.env.PORT, () => {
+    console.log( '===============' );
     console.log( 'Service started' );
+    console.log( '===============' );
     LOGGER.logfile.log( { level: 'info', message: 'Service started' } );
 } );
 
@@ -63,14 +64,14 @@ APP.listen( process.env.PORT || 3000, () => {
 
 APP.get( '/hello', ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( mstimeout );
+    req.setTimeout( CONFIG.mstimeout || 15000 );
     res.status( 200 ).send( 'hello' );
     return;
 } );
 
 APP.get( '*', TIMER.start, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( mstimeout );
+    req.setTimeout( CONFIG.mstimeout || 15000 );
     res.status( 404 ).send( {
         html: null,
         timeMS: TIMER.end( req.body.starttime ),
@@ -82,14 +83,14 @@ APP.get( '*', TIMER.start, ( req, res ) => {
 
 APP.post( '/process', TIMER.start, ACCESSOR.verifyApiKey, VALIDATOR.validate, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( mstimeout );
+    req.setTimeout( CONFIG.mstimeout || 15000 );
     PROCESSOR.processRequest( req, res );
     return;
 } );
 
 APP.post( '*', TIMER.start, ( req, res ) => {
     req.clearTimeout();
-    req.setTimeout( mstimeout );
+    req.setTimeout( CONFIG.mstimeout || 15000 );
     res.status( 404 ).send( {
         html: null,
         timeMS: TIMER.end( req.body.starttime ),

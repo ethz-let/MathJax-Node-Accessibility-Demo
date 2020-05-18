@@ -8,11 +8,11 @@ It processes the string and returns the original *HTML* with the *LaTeX* element
 2. Download *MathJax-Node-Accessibility-Demo* and extract it's contents. You can rename the extracted folder.   
 3. Navigate into the extracted folder.   
 4. If you run *MathJax-Node-Accessibility-Demo* locally you can skip this step and continue with step 5. Otherwise adjust following presets to your preffered values:   
-   4.1 Open `modules/accessor.js` and adjust:   
-   - the list of `apiKeys` (line 7 ff.)
+   4.1 Open `modules/config.js` and adjust:   
+   - the list of `apiKeys` (line 2 ff.)
  
-   4.2 Open `/server.js`:   
-   4.3 Adjust Port `3000` (line 19) to the port number under which *MathJax-Node-Accessibility-Demo* should be accessed.
+   4.2 Open `modules/config.js`:   
+   4.3 Adjust Port `3000` (line 7) to the port number under which *MathJax-Node-Accessibility-Demo* should be accessed.
 
 5. You are done with configuring the presets now. *MathJax-Node-Accessibility-Demo* requires a number of *Node.js* modules in order to be executed.   To install these modules just follow the next two steps:   
    5.1 Navigate into the *MathJax-Node-Accessibility-Demo* folder with commandline (`server.js` is located in this folder).   
@@ -112,7 +112,7 @@ curl -X POST \
 - /process   
   Process route. Please refer **Endpoints**
 - apikey   
-  Your secret API Key, as defined by an administrator in `modules/accessor.js` (refer to **Installation 4.1**)
+  Your secret API Key, as defined by an administrator in `modules/config.js` (refer to **Installation 4.1**)
    Used to authenticate the client.
 - html   
   Your escaped html content strings which will be processed individually.

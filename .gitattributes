@@ -3,7 +3,9 @@
 *.js    eol=lf
 *.json  eol=lf
 *.md    eol=lf
+*.log   eol=lf
 
 *.js    text
 *.json  text
 *.md    text
+*.log   text
