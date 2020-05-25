@@ -113,6 +113,7 @@ module.exports = {
                         svg.removeAttribute( 'aria-labelledby' );
                         svg.setAttribute( 'aria-label', 'Latex Formula' );
                         svg.setAttribute( 'aria-hidden', 'true' );
+                        svg.style.verticalAlign  = "-1.0005ex";
                     }
                 } catch ( error ) {
                     reject( [ 'an error occured in afterConversion()' ] );
