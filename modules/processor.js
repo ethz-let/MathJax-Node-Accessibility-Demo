@@ -98,7 +98,7 @@ module.exports = {
                     var speaktext = SRE.toSpeech( parsedFormula.outputFormula.mml );
                     if ( speaktext ) {
                         parsedFormula.node.innerHTML = 
-                        '<p aria-hidden="false" class="sr-only pLatexText">' + speaktext + '</p>' +
+                        '<span aria-hidden="false" class="sr-only pLatexText">' + speaktext + '</span>' +
                         parsedFormula.outputFormula.svg +
                         '<span class="mathMLFormula" aria-hidden="true">' +  parsedFormula.outputFormula.mml + '</span>';
                     }
@@ -113,7 +113,6 @@ module.exports = {
                         svg.removeAttribute( 'aria-labelledby' );
                         svg.setAttribute( 'aria-label', 'Latex Formula' );
                         svg.setAttribute( 'aria-hidden', 'true' );
-                        svg.style.maxWidth = "100%";
                     }
                 } catch ( error ) {
                     reject( [ 'an error occured in afterConversion()' ] );
