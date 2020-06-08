@@ -98,7 +98,7 @@ module.exports = {
                     var speaktext = SRE.toSpeech( parsedFormula.outputFormula.mml );
                     if ( speaktext ) {
                         parsedFormula.node.innerHTML = 
-                        '<span aria-hidden="false" class="sr-only pLatexText">' + speaktext + '</span>' +
+                        '<span role="text" aria-hidden="false" class="sr-only pLatexText">' + speaktext + '</span>' +
                         parsedFormula.outputFormula.svg +
                         '<span class="mathMLFormula" aria-hidden="true">' +  parsedFormula.outputFormula.mml + '</span>';
                     }
