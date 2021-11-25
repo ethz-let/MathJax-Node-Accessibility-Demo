@@ -146,6 +146,7 @@ The point of this application is to provide a service which
 1. converts plain LaTeX syntax into rendered (SVG) formulas
 2. and also includes invisible MathML & Speaktext to the output.
 
+![Postman Demo](readme.gif?raw=true "Postman Demo")
 
 ## Summary:
 
