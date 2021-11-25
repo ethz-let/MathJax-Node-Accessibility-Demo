@@ -172,7 +172,7 @@ The service is seperated in several modules. Following modules are called in ord
 | Step                        | Fil                  | Description  |
 |:----------------------------|:---------------------|:-------------|
 | 1.APP.post( '/process' ...  | server.js            | The request is being received. The procedure starts here. |   
-| 2.TIMER.start               | modules/timer.js     | Starts a timer to check the processing time. The timer is stopped before each response. |   
+| 2.TIMER.start               | modules/timer.js     | Starts a timer to check the request's processing time. The timer is later stopped before each response. |   
 | 3.ACCESSOR.verifyApiKey     | modules/accessor.js  | Checks if the api-key delivered with the request-header is correct and sends response if this test fails. |   
 | 4.VALIDATOR.validate	      | modules/validator.js | Checks if the data provided with the request-body is valid and sends response if this test fails. |   
 | 5.PROCESSOR.processRequest  | modules/processor.js | Processes the actual body. The keys are seperately handled each key is being processed in an individual promise.  After processing is complete a response is being sent. |   
