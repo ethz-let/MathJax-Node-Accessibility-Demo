@@ -136,3 +136,48 @@ Currently *TLS* is not used in this prototype. Add *TLS* support.
 Requests from the client must be validated.   
 - Prevent brute-force attacks against authorization:   
 Add mechanics to limit the number of requests.
+
+---
+
+# Software Design Document
+## Motivation:
+
+The point of this application is to provide a service which 
+1. converts plain LaTeX syntax into rendered (SVG) formulas
+2. and also includes invisible MathML & Speaktext to the output.
+The output is sent back to the client.
+
+
+## Summary:
+
+The MathJax-Node-Accessibility-Demo is a Node.js application that receives and processes/answers POST-requests:
+This POST-requests contain
+- a header which includes an *api-key* attribute-value pair which will be used to verify the client before further processing.
+- a body (JSON) containing strings stored in induvial keys: each string consists of plain HTML combined with raw LaTeX. These strings are the main part of the whole service and are later used as individual inputs for further processing.
+
+
+## Procedure:
+
+A client sends a request to the endpoint "/process" containing the header and body information as mentioned in "Summary".
+If the header api-key has been validated successfully the body is validated for correct structure. It the seconds validation also is successful the procedure goes on with the actual processing: Each key of the body's JSON is used as input and for each of these keys an output consisting of a SVG, invisible MathML and Speaktext is created.
+Once this step was successful the application will send a response to the client containing the output data.
+
+
+## Procedure (technical view):
+
+The service is seperated in several modules. Following modules are called in order with each request:
+
+| Step                        | Fil                  | Description  |
+|:----------------------------|:---------------------|:-------------|
+| 1.APP.post( '/process' ...  | server.js            | The request is being received. The procedure starts here. |   
+| 2.TIMER.start               | modules/timer.js     | Starts a timer to check the processing time. The timer is stopped before each response. |   
+| 3.ACCESSOR.verifyApiKey     | modules/accessor.js  | Checks if the api-key delivered with the request-header is correct and sends response if this test fails. |   
+| 4.VALIDATOR.validate	      | modules/validator.js | Checks if the data provided with the request-body is valid and sends response if this test fails. |   
+| 5.PROCESSOR.processRequest  | modules/processor.js | Processes the actual body. The keys are seperately handled each key is being processed in an individual promise.  After processing is complete a response is being sent. |   
+
+
+
+
+## How to handle commits and updates:
+
+After the code has been committed, Werner Schnedl <werner.schnedl@id.ethz.ch> will test the changes made. If the newest commit has been tested as successful the DockerSetup.zip also needs to be updated and uploaded to the repository. Michael Odermatt <michael.odermatt@let.ethz.ch> will update the MathJax Node Service to our systems.
