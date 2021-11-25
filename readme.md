@@ -174,10 +174,10 @@ The service is seperated in several modules. Following modules are called in ord
 | 1.APP.post( '/process' ...  | server.js            | The request is being received. The procedure starts here. |   
 | 2.TIMER.start               | modules/timer.js     | Starts a timer to check the request's processing time. The timer is later stopped before each response. |   
 | 3.ACCESSOR.verifyApiKey     | modules/accessor.js  | Checks if the api-key delivered with the request-header is correct and immediately quits/sends a response if this test fails. |   
-| 4.VALIDATOR.validate	      | modules/validator.js | Checks if the data provided with the request-body is valid and immediately quits/sends aresponse if this test fails. |   
+| 4.VALIDATOR.validate	      | modules/validator.js | Checks if the data provided with the request-body is valid and immediately quits/sends a response if this test fails. |   
 | 5.PROCESSOR.processRequest  | modules/processor.js | Processes the actual body. The keys are seperately handled each key is being processed in an individual promise.  After processing is complete a response is being sent. If a general error occurs during processing the process immediately quits and a response is being sent to the client. |   
 
-
+The LOGGER.logfile module which is not listed in this list, is called independently at different places of the whole code structure. It's main function is to log certain events, such as errors or general information.
 
 
 ## How to handle commits and updates:
