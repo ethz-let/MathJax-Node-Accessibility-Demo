@@ -145,7 +145,6 @@ Add mechanics to limit the number of requests.
 The point of this application is to provide a service which 
 1. converts plain LaTeX syntax into rendered (SVG) formulas
 2. and also includes invisible MathML & Speaktext to the output.
-The output is sent back to the client.
 
 
 ## Summary:
@@ -159,8 +158,11 @@ This POST-requests contain
 ## Procedure:
 
 A client sends a request to the endpoint "/process" containing the header and body information as mentioned in "Summary".
-If the header api-key has been validated successfully the body is validated for correct structure. It the seconds validation also is successful the procedure goes on with the actual processing: Each key of the body's JSON is used as input and for each of these keys an output consisting of a SVG, invisible MathML and Speaktext is created.
-Once this step was successful the application will send a response to the client containing the output data.
+
+If the header api-key has been validated successfully the body is validated for correct structure. If the seconds validation also is successful the procedure goes on with the actual processing: 
+
+Each key's value of the body's JSON is used as input and for each of these values an output consisting of a SVG, invisible MathML and Speaktext is generated.
+Once this step has ended successfully the application will send a response to the client containing the output data.
 
 
 ## Procedure (technical view):
