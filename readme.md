@@ -3,6 +3,8 @@
 A *Node.js* application that receives *HTML* combined with raw *LaTeX* syntax as an input string.   
 It processes the string and returns the original *HTML* with the *LaTeX* elements converted into *SVG* and invisible *MathML*.
 
+![Postman Demo](readme.gif?raw=true "Postman Demo")
+
 ## Installation:
 1. Make sure [Node.js](https://nodejs.org/en/) is installed on the system.   
 2. Download *MathJax-Node-Accessibility-Demo* and extract it's contents. You can rename the extracted folder.   
@@ -146,7 +148,6 @@ The point of this application is to provide a service which
 1. converts plain LaTeX syntax into rendered (SVG) formulas
 2. and also includes invisible MathML & Speaktext to the output.
 
-![Postman Demo](readme.gif?raw=true "Postman Demo")
 
 ## Summary:
 
