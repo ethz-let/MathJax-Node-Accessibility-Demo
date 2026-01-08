@@ -1,10 +1,5 @@
 {
   // your global project formatting
   "editor.formatOnSave": true,
-  "editor.formatOnPaste": false,
-  // override ONLY for CDS files
-  "[cds]": {
-    "editor.formatOnSave": false,
-    "editor.defaultFormatter": null
-  }
+  "editor.formatOnPaste": false
 }
