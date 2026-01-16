@@ -14,10 +14,9 @@ module.exports = {
   },
 
   processRequest: async (req, res) => {
+    let promises = {};
 
     try {
-      let promises = {};
-
       for (let key in req.body.html) {
         req.body.html[key] = req.body.html[key]
           .replace("\\(", "$")
