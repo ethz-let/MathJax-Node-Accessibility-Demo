@@ -4,17 +4,19 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js"
+        "dev": "node -r dotenv/config server.js",
+        "prod": "node server.js"
     },
     "author": "Martin Hanusch",
     "license": "ISC",
     "dependencies": {
         "body-parser": "^2.2.2",
         "connect-timeout": "^1.9.1",
+        "dotenv": "^17.2.3",
         "express": "^5.2.1",
         "helmet": "^8.1.0",
         "mathjax-node-page": "^3.2.0",
-        "speech-rule-engine": "3.1.0-beta.2",
+        "speech-rule-engine": "5.0.0-beta.3",
         "winston": "^3.19.0"
     }
 }

@@ -1,6 +1,5 @@
 const TIMER = require('./timer');
 const LOGGER = require('./logger');
-const CONFIG = require('./config');
 
 module.exports = {
 
@@ -19,9 +18,7 @@ module.exports = {
         return;
       }
 
-      const apiKeys = CONFIG.apiKeys;
-
-      if (!apiKeys) {
+      if (!process?.env?.API_KEY) {
         res.status(500).send({
           html: null,
           timeMS: TIMER.end(req.body.starttime),
@@ -31,7 +28,7 @@ module.exports = {
         return;
       }
 
-      if (apiKeys.includes(apiKey)) {
+      if (process.env.API_KEY == apiKey) {
         next();
       } else {
         res.status(403).send({

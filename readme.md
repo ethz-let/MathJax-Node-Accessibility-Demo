@@ -5,25 +5,9 @@ It processes the string and returns the original *HTML* with the *LaTeX* element
 
 ![Postman Demo](readme.gif?raw=true "Postman Demo")
 
-## Installation:
-1. Make sure [Node.js](https://nodejs.org/en/) is installed on the system.   
-2. Download *MathJax-Node-Accessibility-Demo* and extract it's contents. You can rename the extracted folder.   
-3. Navigate into the extracted folder.   
-4. If you run *MathJax-Node-Accessibility-Demo* locally you can skip this step and continue with step 5. Otherwise adjust following presets to your preffered values:   
-   4.1 Open `modules/config.js` and adjust:   
-   - the list of `apiKeys` (line 2 ff.)
- 
-   4.2 Open `modules/config.js`:   
-   4.3 Adjust Port `3000` (line 7) to the port number under which *MathJax-Node-Accessibility-Demo* should be accessed.
-
-5. You are done with configuring the presets now. *MathJax-Node-Accessibility-Demo* requires a number of *Node.js* modules in order to be executed.   To install these modules just follow the next two steps:   
-   5.1 Navigate into the *MathJax-Node-Accessibility-Demo* folder with commandline (`server.js` is located in this folder).   
-   5.2 Exectue the `npm install` command. This will trigger the Node Package Manager to install all required dependencies for you.   
-
-6. Everything is set up now and the application is ready to start.   
-Run `node server.js` in commandline to start the application.   
-The application is now running and listening to port 3000 or to the port you specified in **4.3**   
-(a process manager like [PM2](https://www.npmjs.com/package/pm2) is recommended for production use).
+## Installation Hints:
+1. Make sure [Node.js](https://nodejs.org/en/) (v18+) is installed on the system.   
+2. Make sure to set API_KEY in the environment variables.
 
 ## Endpoints:
 

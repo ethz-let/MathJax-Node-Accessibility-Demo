@@ -65,9 +65,7 @@ module.exports = {
   },
 
   mjpageconversion: async (html, language) => {
-
     return new Promise((resolve, reject) => {
-
       MJPAGE(html, {
         format: ["TeX"],
         fragment: true,
@@ -86,13 +84,12 @@ module.exports = {
         (result) => {
           resolve({ content: result });
         })
-        .on('afterConversion', (parsedFormula) => {
+        .on('afterConversion', async (parsedFormula) => {
           try {
-            if (language == 'de') {
-              SRE.setupEngine({ locale: 'de', domain: 'mathspeak' });
-            } else {
-              SRE.setupEngine({ locale: 'en', domain: 'mathspeak' });
-            }
+            await SRE.setupEngine({
+              locale: language === 'de' ? 'de' : 'en',
+              domain: 'mathspeak'
+            });
 
             let speaktext = SRE.toSpeech(parsedFormula.outputFormula.mml);
             if (speaktext) {
